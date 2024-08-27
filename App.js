@@ -1,35 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+
+const Item = ({textAlign, textAlignVertical}) => (
+  <Text style={[styles.paragraph, {textAlignVertical: textAlignVertical, textAlign: textAlign}]}>
+    textAlignVertical: <Text style={{ fontWeight: 'bold' }}>{ textAlignVertical } </Text>
+    {'\n'}
+    textAlign: <Text style={{ fontWeight: 'bold' }}>{ textAlign } </Text> 
+  </Text>
+)
+
+function generateCombinations(list1, list2) {
+  const combinations = [];
+
+  for (let item1 of list1) {
+    for (let item2 of list2) {
+      combinations.push({item1, item2});
+    }
+  }
+
+  return combinations;
+}
 
 export default function App() {
+  const textAlignVerticalValues = ['auto', 'top', 'bottom', 'center'];
+  const textAlignValues = ['auto', 'center', 'right', 'left', 'justify', undefined];
+  const combinations = generateCombinations(textAlignValues, textAlignVerticalValues);
+
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#232526', '#66686a']}
-        style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
+      <FlatList
+        data={combinations}
+        renderItem={({item}) => <Item textAlignVertical={item.item2} textAlign={item.item1} />}
+        numColumns={3}
       />
-
-      <View style={{ position: 'absolute', bottom: 50, left: 0, right: 0, alignItems: 'center' }}>
-        <Image
-          style={{ width: 100, height: 100 }}
-          contentFit="contain"
-          source="https://raw.githubusercontent.com/expo/styleguide/main/common/logos/word-mark-logo.svg"
-        />
-      </View>
-
-      <Image
-        style={{ width: 200, height: 200 }}
-        contentFit="contain"
-        source="https://d33wubrfki0l68.cloudfront.net/554c3b0e09cf167f0281fda839a5433f2040b349/ecfc9/img/header_logo.svg"
-      />
-
-      <Text style={{ fontSize: 22, marginTop: 15, color: '#fff' }}>
-        New Architecture: <Text style={{ fontWeight: 'bold' }}>Enabled</Text>
-      </Text>
-
-      < StatusBar style="auto" />
     </View>
   );
 }
@@ -37,8 +39,22 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    paddingTop: 30,
+    backgroundColor: '#b9b9b9',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  paragraph: {
+    fontSize: 10,
+    color: '#00f', 
+    height: 120, 
+    backgroundColor: '#DAF7A6',
+    width: 120,
+    margin: 5
+  },
+  header: {
+    fonsize: 20,
+    marginBottom: 5,
+    color: 'black',  
+  }
 });
